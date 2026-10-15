@@ -144,8 +144,9 @@ class VerifiedClient:
 
     def _verify_response(self, status, headers, body_bytes):
         """Verify X-NPC-Signature. Returns parsed JSON. Raises on failure."""
-        sig_b64 = headers.get("X-NPC-Signature")
-        key_id = headers.get("X-NPC-Key-ID")
+        lowered = {k.lower(): v for k, v in headers.items()}
+        sig_b64 = lowered.get("x-npc-signature")
+        key_id = lowered.get("x-npc-key-id")
         if not sig_b64 or not key_id:
             raise ApiError("response missing X-NPC-Signature/X-NPC-Key-ID - "
                            "refusing to trust it")
